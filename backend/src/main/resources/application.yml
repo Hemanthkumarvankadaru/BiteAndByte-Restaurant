@@ -1,0 +1,74 @@
+# Shared configuration. Profile files: application-dev.yml (H2, default),
+# application-postgres.yml and application-oracle.yml.
+spring:
+  application:
+    name: biteandbyte-restaurant
+  config:
+    # Optional local secrets file (backend/.env). See backend/.env.example.
+    import: optional:file:.env[.properties]
+  profiles:
+    default: dev
+  jpa:
+    open-in-view: false
+    hibernate:
+      # Flyway owns the schema. Hibernate only checks entities match it.
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+        type:
+          # Store Instant as plain TIMESTAMP (UTC) so one schema works on H2, PostgreSQL and Oracle.
+          preferred_instant_jdbc_type: TIMESTAMP
+        # Loads lazy associations (order items, categories) in batches instead of one query each.
+        default_batch_fetch_size: 50
+  flyway:
+    # {vendor} resolves to h2, postgresql or oracle from the active datasource.
+    locations: classpath:db/migration/{vendor}
+  jackson:
+    time-zone: UTC
+
+server:
+  port: ${SERVER_PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+# Application settings. Typed in com.biteandbyte.restaurant.config.*Properties.
+biteandbyte:
+  pricing:
+    gst-percent: 5
+    delivery-charge: 40.00
+    free-delivery-above: 500.00
+  store:
+    # Days for order numbers, the dashboard and revenue reports end at midnight here.
+    time-zone: Asia/Kolkata
+    low-stock-threshold: 5
+  cors:
+    allowed-origins: ${BITEANDBYTE_CORS_ORIGINS:http://localhost:5173}
+  admin:
+    username: admin
+    password: ${BITEANDBYTE_ADMIN_PASSWORD:admin}
+    email: ${BITEANDBYTE_ADMIN_EMAIL:admin@biteandbyte-restaurant.local}
+    phone: ${BITEANDBYTE_ADMIN_PHONE:9000000000}
+    full-name: BiteAndByte Admin
+  seed:
+    menu: ${BITEANDBYTE_SEED_MENU:true}
+  jwt:
+    # Required outside the dev profile: at least 32 random characters.
+    secret: ${BITEANDBYTE_JWT_SECRET:}
+    issuer: biteandbyte-restaurant
+    access-token-ttl: 15m
+    refresh-token-ttl: 7d

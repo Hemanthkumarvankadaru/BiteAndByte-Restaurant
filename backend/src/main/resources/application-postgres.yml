@@ -1,0 +1,6 @@
+# PostgreSQL. Run with --spring.profiles.active=postgres
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/biteandbyte}
+    username: ${DB_USERNAME:biteandbyte}
+    password: ${DB_PASSWORD:}

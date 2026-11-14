@@ -1,0 +1,45 @@
+# One ignore file for the whole repo (backend and frontend).
+
+# Secrets: never commit real env files. The *.example templates are committed.
+.env
+.env.*
+!.env.example
+*.local
+
+# Documentation and project guidance
+CLAUDE.md
+README.md
+docs/IMPLEMENTATION_PLAN.md
+docs/implementation_plan.md
+
+# Build output
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/coverage/
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors and IDEs
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+.factorypath
+.apt_generated
+.sts4-cache/
+*.suo
+*.sw?
